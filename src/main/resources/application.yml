@@ -1,0 +1,42 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: ticketing
+  threads:
+    virtual:
+      enabled: true          # Java 21 virtual threads: cheap blocking I/O, many concurrent requests
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/ticketing}
+    username: ${DB_USER:ticketing}
+    password: ${DB_PASSWORD:ticketing}
+    hikari:
+      maximum-pool-size: ${DB_POOL:20}   # the DB pool is the real concurrency limit, keep it small
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: 6379
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    consumer:
+      auto-offset-reset: earliest
+    listener:
+      concurrency: 3
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+app:
+  queue:
+    max-active: ${QUEUE_MAX_ACTIVE:500}        # users allowed in the booking phase at once
+    token-ttl-seconds: ${QUEUE_TOKEN_TTL:300}  # how long an admitted user may book
+    admit-interval-ms: 1000
+  rate-limit:
+    per-second: ${RATE_LIMIT:10}
+  seat:
+    hold-seconds: ${SEAT_HOLD_SECONDS:600}
+  outbox:
+    poll-ms: 200
+  payment:
+    success-percent: ${PAYMENT_SUCCESS_PERCENT:90}
