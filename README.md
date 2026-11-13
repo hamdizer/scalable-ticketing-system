@@ -75,7 +75,7 @@ The second query must return zero rows.
 - Redis: Sentinel or Cluster. Note the admission Lua script uses fixed key names plus one dynamic key, so under Redis Cluster use hash tags.
 - Observability: Prometheus + Grafana on `/actuator/metrics`.
 
-## Known limitations (be honest in an interview)
+## Known limitations
 
 - No real authentication: the user id comes from the `X-User-Id` header. Add Spring Security + JWT for production, and bind queue tokens to the authenticated user.
 - Payment is simulated (random delay, 90% success).
